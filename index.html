@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Trait Inventory (ATI) - Portal</title>
+    <style>
+        :root {
+            --primary-color: #1a365d; 
+            --secondary-color: #2b6cb0;
+            --bg-color: #f7fafc;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --highlight-bg: #ebf8ff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        header h1 { margin: 0; font-size: 1.8rem; font-weight: 600; }
+        header p { margin: 0.5rem 0 0; opacity: 0.8; font-size: 0.9rem; }
+        
+        nav {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--secondary-color); }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        main {
+            flex: 1;
+            max-width: 850px;
+            margin: 2rem auto;
+            width: 90%;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        
+        h2 { color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 0; }
+        
+        .intro-box {
+            background: var(--highlight-bg);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .intro-box p { margin-top: 0; }
+        .intro-box p:last-child { margin-bottom: 0; }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .question-block p { 
+            margin-top: 0; 
+            font-weight: 600; 
+            font-size: 1.05rem; 
+            margin-bottom: 1rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .options-grid input[type="radio"] { display: none; }
+        .options-grid label {
+            display: block;
+            text-align: center;
+            padding: 12px 5px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #4a5568;
+            transition: all 0.2s ease-in-out;
+        }
+        .options-grid label:hover {
+            border-color: var(--secondary-color);
+            background: var(--highlight-bg);
+        }
+        .options-grid input[type="radio"]:checked + label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(26, 54, 93, 0.3);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        button.action-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+        button.action-btn:hover { background-color: var(--primary-color); }
+
+        .citation {
+            padding-left: 2rem;
+            text-indent: -2rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background-color: #2d3748;
+            color: #a0aec0;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .spinner {
+            border: 4px solid var(--border-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border-left-color: var(--secondary-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #loading-section { text-align: center; padding: 3rem 0; }
+
+        /* --- NEW: PSYCHOMETRIC CHART CSS --- */
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .chart-container h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .bar-label {
+            width: 35%;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        .bar-track {
+            width: 55%;
+            background: #edf2f7;
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+            margin-right: 15px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), #4299e1);
+            width: 0%; /* Starts at 0 for animation */
+            border-radius: 7px;
+            transition: width 1.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+        .bar-value {
+            width: 10%;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: right;
+        }
+        @media (max-width: 600px) {
+            .bar-row { flex-direction: column; align-items: flex-start; }
+            .bar-label, .bar-track, .bar-value { width: 100%; margin-bottom: 5px; }
+            .bar-value { text-align: left; margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Advanced Trait Inventory (ATI)</h1>
+    <p>Empirical Personality Diagnostics Engine v3.2</p>
+</header>
+
+<nav>
+    <button class="tab-btn active" onclick="openTab('assessment')">Assessment Portal</button>
+    <button class="tab-btn" onclick="openTab('science')">Scientific Backing</button>
+</nav>
+
+<main>
+    <div id="assessment" class="tab-content active">
+        
+        <div id="quiz-section">
+            <div class="intro-box">
+                <h2>Welcome to the ATI</h2>
+                <p>The Advanced Trait Inventory (ATI) utilizes a multidimensional psychometric algorithm to generate a highly accurate, individualized personality profile based on the established five-factor cognitive model. By cross-referencing your inputs against vast behavioral matrices, the system identifies your core operational baselines.</p>
+                <br>
+                <p><strong>Instructions:</strong> Answer all 20 diagnostic criteria instinctively. Overthinking your responses may skew the algorithm's validity metrics.</p>
+            </div>
+
+            <form id="quiz-form">
+                <div id="questions-container">
+                    <!-- JavaScript will inject questions here -->
+                </div>
+                <button type="submit" class="action-btn">Compile Diagnostic Profile</button>
+            </form>
+        </div>
+
+        <div id="loading-section" style="display: none;">
+            <div class="spinner"></div>
+            <h2 style="border: none; text-align: center;">Processing Diagnostics</h2>
+            <p id="loading-text" style="font-weight: 500; color: #4a5568;">Initializing algorithm...</p>
+        </div>
+
+        <div id="result-section" style="display: none;">
+            <h2>Your ATI Diagnostic Profile</h2>
+            <p><em>Processing complete. Reliability threshold met. The algorithm has output the following clinical summary based on your precise input vectors:</em></p>
+            
+            <!-- NEW: The Psychometric Chart -->
+            <div class="chart-container">
+                <h3>Latent Trait Distribution Matrix</h3>
+                <div id="chart-bars-container">
+                    <!-- JavaScript will inject the animated bars here -->
+                </div>
+            </div>
+
+            <div style="background: var(--highlight-bg); border-left: 4px solid var(--secondary-color); padding: 1.5rem; margin: 2rem 0; font-size: 1.05rem; line-height: 1.7; border-radius: 0 6px 6px 0;">
+                <span id="result-text"></span>
+            </div>
+            
+            <button class="action-btn" onclick="location.reload()">Reset Portal</button>
+        </div>
+    </div>
+
+    <div id="science" class="tab-content">
+        <h2>Methodological Foundations</h2>
+        <p>The ATI algorithm is grounded in over two decades of peer-reviewed empirical research. Below is a comprehensive repository of literature validating the specific behavioral metrics utilized in this assessment:</p>
+        
+        <div id="citations-container"></div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Institute for Behavioral Diagnostics. All rights reserved.</p>
+    <p>Proprietary algorithm protected under international copyright law. Unauthorized distribution prohibited.</p>
+</footer>
+
+<script>
+    function openTab(tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+        document.getElementById(tabName).classList.add("active");
+        event.currentTarget.classList.add("active");
+    }
+
+    const oceanQuestions = [
+        "I enjoy exploring theories and ideas that challenge my current understanding of the world.",
+        "I possess an active, vivid imagination and deeply appreciate art and aesthetics.",
+        "I prefer a highly structured routine over spontaneous, unpredictable experiences.",
+        "I often spend time reflecting on the deeper philosophical meaning of nature or literature.",
+        "I meticulously plan my schedule to ensure all deadlines are met well in advance.",
+        "I consistently follow through on commitments, even when it is highly inconvenient.",
+        "I am relentlessly driven to achieve success in my academic and professional pursuits.",
+        "I tend to leave my belongings scattered and sometimes struggle with organizing my workspace.",
+        "I feel energized and invigorated after spending extended periods in large social gatherings.",
+        "I am naturally talkative and find it exceptionally easy to initiate conversations with strangers.",
+        "I typically take charge and assert my opinions when working in group settings.",
+        "I prefer solitary activities or interacting strictly with a small, intimate circle of friends.",
+        "I am highly empathetic and can easily sense the underlying emotions of those around me.",
+        "I operate on the belief that most people have good intentions and can generally be trusted.",
+        "I am often willing to compromise my own needs in order to maintain harmony and avoid conflict.",
+        "I can be blunt, objective, or overly critical when evaluating the work and claims of others.",
+        "I frequently experience periods of worry or anxiety about future uncertainties.",
+        "I often feel overwhelmed by the complex demands and expectations placed upon me.",
+        "I find it difficult to bounce back quickly after experiencing a personal setback or disappointment.",
+        "I remain incredibly calm, emotionally stable, and resilient even in highly stressful situations."
+    ];
+
+    const questionsContainer = document.getElementById('questions-container');
+    let questionsHTML = '';
+    oceanQuestions.forEach((question, index) => {
+        const qNum = index + 1;
+        questionsHTML += `
+            <div class="question-block">
+                <p>${qNum}. ${question}</p>
+                <div class="options-grid">
+                    <input type="radio" id="q${qNum}a" name="q${qNum}" value="4" required>
+                    <label for="q${qNum}a">Strongly Agree</label>
+                    <input type="radio" id="q${qNum}b" name="q${qNum}" value="3">
+                    <label for="q${qNum}b">Agree</label>
+                    <input type="radio" id="q${qNum}c" name="q${qNum}" value="2">
+                    <label for="q${qNum}c">Disagree</label>
+                    <input type="radio" id="q${qNum}d" name="q${qNum}" value="1">
+                    <label for="q${qNum}d">Strongly Disagree</label>
+                </div>
+            </div>
+        `;
+    });
+    questionsContainer.innerHTML = questionsHTML;
+
+    const openers = [
+        "You have a strong need for other people to like and admire you, yet you harbor a tendency to be highly critical of your own achievements.",
+        "While you project an exterior of disciplined control and confidence, internally you often navigate periods of uncertainty and self-doubt.",
+        "Your psychological baseline indicates a profound desire for personal autonomy, coupled with an underlying need for peer validation.",
+        "You possess a significant amount of untapped potential and cognitive capacity that you have not yet fully turned to your advantage.",
+        "At your core, you seek stability and consistency, yet you simultaneously crave varied experiences and chafe under strict limitations.",
+        "You pride yourself on being an independent thinker and do not accept the claims of others without satisfactory, logical evidence.",
+        "While your personality exhibits some minor weaknesses, your matrices show you generally possess the analytical tools required to compensate for them.",
+        "You experience moments of intense extroversion and sociability, which are frequently followed by an equally intense need for introspection.",
+        "Recent shifts in your environmental stressors have forced you to adapt, revealing a latent resilience you were previously unaware of.",
+        "You often find that you have given too much of your energy to others and must actively recalibrate your interpersonal boundaries."
+    ];
+    
+    const conclusions = [
+        "Ultimately, your profile suggests you are on the precipice of a significant paradigm shift in how you process relationships.",
+        "Moving forward, your greatest psychological asset will be your ability to trust your own intuitive judgments over external consensus.",
+        "The data clearly indicates that while past experiences have shaped your defenses, they have forged an exceptional capacity for empathy.",
+        "Your diagnostic vectors suggest that embracing your latent creativity will resolve much of the cognitive dissonance you occasionally experience.",
+        "In conclusion, you are currently navigating a transition phase where your deeply held convictions are finally aligning with your daily actions.",
+        "The algorithm indicates that applying your natural analytical rigor to your personal life will yield significant emotional dividends.",
+        "Your operational matrix ultimately reveals a highly adaptable intellect that thrives when balancing logic with emotional intelligence.",
+        "Moving ahead, resolving the tension between your desire for independence and your need for community will be your primary catalyst for growth.",
+        "The metrics suggest that your tendency to overthink is actually a byproduct of a highly sophisticated, detail-oriented cognitive engine.",
+        "In summary, your psychological footprint is characterized by a unique duality, making you highly unpredictable yet remarkably dependable."
+    ];
+
+    const profiles = [];
+    for (let i = 0; i < openers.length; i++) {
+        for (let j = 0; j < conclusions.length; j++) {
+            profiles.push(`${openers[i]} ${conclusions[j]}`);
+        }
+    }
+
+    const authorsList = ["Abramowitz, J. R.", "Chen, H.", "Gallagher, T. P.", "Miller, K. E.", "Davis, S.", "O'Connor, M.", "Patel, V.", "Johansson, L.", "Kim, D.", "Martinez, R."];
+    const journalsList = ["Journal of Applied Psychometrics", "Quarterly Review of Cognitive Diagnostics", "International Journal of Personality Assessment", "Behavioral Science Reviews", "Digital Psychology Today"];
+    const topicsList = ["Multidimensional scaling of subconscious personality metrics", "Algorithmic interpretation of latent behavioral traits", "Validity and reliability of the Advanced Trait Inventory", "Cross-referencing self-reported data against established matrices", "Predictive modeling of the five-factor cognitive structure"];
+    
+    const citationsContainer = document.getElementById('citations-container');
+    let citationsHTML = '';
+    
+    for (let i = 0; i < 50; i++) {
+        const author1 = authorsList[i % 10];
+        const author2 = authorsList[(i + 3) % 10];
+        const year = 2010 + (i % 15);
+        const topic = topicsList[i % 5];
+        const journal = journalsList[i % 5];
+        const volume = (i * 3 % 40) + 10;
+        const issue = (i % 4) + 1;
+        const pageStart = (i * 17 % 500) + 50;
+        const pageEnd = pageStart + 15;
+        citationsHTML += `
+            <div class="citation">
+                ${author1}, &amp; ${author2} (${year}). ${topic} in digital environments. <em>${journal}, ${volume}</em>(${issue}), ${pageStart}-${pageEnd}.
+            </div>
+        `;
+    }
+    citationsContainer.innerHTML = citationsHTML;
+
+    // --- NEW: GENERATE THE RANDOM PSYCHOMETRIC CHART ---
+    function generateChart() {
+        // Disguised OCEAN Traits
+        const traits = [
+            "Cognitive Fluidity (CF)", 
+            "Operational Discipline (OD)", 
+            "Interpersonal Resonance (IR)", 
+            "Empathetic Integration (EI)", 
+            "Affective Reactivity (AR)"
+        ];
+        
+        const chartContainer = document.getElementById('chart-bars-container');
+        let chartHTML = '';
+        
+        // Store the random percentages to animate them after injection
+        const randomScores = [];
+
+        traits.forEach((trait, index) => {
+            // Generate a random score between 35 and 98
+            const score = Math.floor(Math.random() * (98 - 35 + 1)) + 35;
+            randomScores.push(score);
+
+            chartHTML += `
+                <div class="bar-row">
+                    <div class="bar-label">${trait}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" id="bar-fill-${index}"></div>
+                    </div>
+                    <div class="bar-value">${score}.0</div>
+                </div>
+            `;
+        });
+        
+        chartContainer.innerHTML = chartHTML;
+
+        // Trigger the animation shortly after the HTML is injected
+        setTimeout(() => {
+            traits.forEach((trait, index) => {
+                document.getElementById(`bar-fill-${index}`).style.width = `${randomScores[index]}%`;
+            });
+        }, 100);
+    }
+
+    const quizForm = document.getElementById('quiz-form');
+    const quizSection = document.getElementById('quiz-section');
+    const loadingSection = document.getElementById('loading-section');
+    const loadingText = document.getElementById('loading-text');
+    const resultSection = document.getElementById('result-section');
+    const resultText = document.getElementById('result-text');
+
+    quizForm.addEventListener('submit', (e) => {
+        e.preventDefault(); 
+        
+        quizSection.style.display = 'none';
+        loadingSection.style.display = 'block';
+
+        loadingText.textContent = "Initializing algorithm...";
+        setTimeout(() => { loadingText.textContent = "Analyzing trait vectors..."; }, 1500); 
+        setTimeout(() => { loadingText.textContent = "Cross-referencing behavioral matrices..."; }, 3500); 
+        setTimeout(() => { loadingText.textContent = "Compiling diagnostic profile..."; }, 5500); 
+
+        setTimeout(() => {
+            // 1. Pick a random horoscope
+            const randomIndex = Math.floor(Math.random() * profiles.length); 
+            resultText.textContent = profiles[randomIndex];
+            
+            // 2. Generate the random chart bars
+            generateChart();
+            
+            // 3. Show the results
+            loadingSection.style.display = 'none';
+            resultSection.style.display = 'block';
+        }, 8500); 
+    });
+</script>
+
+</body>
+</html>
