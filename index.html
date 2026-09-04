@@ -3,326 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Trait Inventory (ATI) - Portal</title>
+    <title>Trait DNA — Complete Psychometric Mapping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1a365d; 
-            --secondary-color: #2b6cb0;
-            --bg-color: #f7fafc;
-            --text-color: #2d3748;
+            --bg-warm: #fcf9f2;
+            --purple-accent: #6b11ff;
+            --purple-hover: #5500e0;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.85);
             --border-color: #e2e8f0;
-            --highlight-bg: #ebf8ff;
         }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-warm);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 10% 20%, #ffeedd 0%, transparent 40%),
+                        radial-gradient(circle at 90% 30%, #ebd8ff 0%, transparent 45%),
+                        radial-gradient(circle at 50% 80%, #fdfbf7 0%, #f7f0e6 100%);
+            z-index: -2;
+        }
+
+        .bg-rings {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 1200px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            pointer-events: none;
+            z-index: -1;
+            box-shadow: 0 0 0 150px rgba(0, 0, 0, 0.015),
+                        0 0 0 300px rgba(0, 0, 0, 0.01),
+                        0 0 0 450px rgba(0, 0, 0, 0.005);
+        }
+
         header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        header h1 { margin: 0; font-size: 1.8rem; font-weight: 600; }
-        header p { margin: 0.5rem 0 0; opacity: 0.8; font-size: 0.9rem; }
-        
-        nav {
-            background-color: white;
-            border-bottom: 1px solid var(--border-color);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 4rem;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
         }
-        .tab-btn {
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .logo-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-1 { background: #ff7676; }
+        .dot-2 { background: #55e6c1; }
+        .dot-3 { background: #ffdd59; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
             background: none;
             border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #4a5568;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
             cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            transition: color 0.2s;
+            padding: 0;
+            border-bottom: 2px solid transparent;
         }
-        .tab-btn:hover { color: var(--secondary-color); }
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
+
+        .nav-link:hover { color: var(--text-dark); }
+        .nav-link.active { color: var(--text-dark); border-bottom-color: var(--purple-accent); padding-bottom: 2px;}
 
         main {
             flex: 1;
-            max-width: 850px;
-            margin: 2rem auto;
+            max-width: 900px;
+            margin: 1.5rem auto 4rem auto;
             width: 90%;
+        }
+
+        .hero-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 4rem;
+            line-height: 1.1;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title em { font-style: italic; color: var(--purple-accent); }
+
+        .hero-subtitle {
+            text-align: center;
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 2.5rem auto;
+            line-height: 1.6;
+        }
+
+        .card-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        
+        .tab-content h2 {
+            font-family: 'Instrument Serif', serif; 
+            font-size: 2.4rem; 
+            margin-top: 0;
+            color: var(--text-dark);
+        }
+        
+        .tab-content p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-content a {
+            color: var(--purple-accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .tab-content a:hover { text-decoration: underline; }
+
+        /* --- LOGIN FORM STYLES --- */
+        .input-field {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
             background: white;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
-        .tab-content { display: none; animation: fadeIn 0.4s; }
-        .tab-content.active { display: block; }
-        
-        h2 { color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 0; }
-        
-        .intro-box {
-            background: var(--highlight-bg);
-            border-left: 4px solid var(--secondary-color);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border-radius: 0 8px 8px 0;
+        .input-field:focus {
+            outline: none;
+            border-color: var(--purple-accent);
+            box-shadow: 0 0 0 3px rgba(107, 17, 255, 0.1);
         }
-        .intro-box p { margin-top: 0; }
-        .intro-box p:last-child { margin-bottom: 0; }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
 
         .question-block {
-            margin-bottom: 2rem;
+            margin-bottom: 2.2rem;
             padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
-        .question-block p { 
-            margin-top: 0; 
-            font-weight: 600; 
-            font-size: 1.05rem; 
-            margin-bottom: 1rem;
+
+        .question-block p {
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-dark);
         }
+
         .options-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
+
         .options-grid input[type="radio"] { display: none; }
+
         .options-grid label {
             display: block;
             text-align: center;
-            padding: 12px 5px;
+            padding: 14px 8px;
             background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
             font-size: 0.9rem;
-            color: #4a5568;
-            transition: all 0.2s ease-in-out;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
         }
+
         .options-grid label:hover {
-            border-color: var(--secondary-color);
-            background: var(--highlight-bg);
+            border-color: var(--purple-accent);
+            color: var(--purple-accent);
+            background: #f9f5ff;
         }
+
         .options-grid input[type="radio"]:checked + label {
-            background-color: var(--primary-color);
+            background-color: var(--purple-accent);
             color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 5px rgba(26, 54, 93, 0.3);
-            transform: translateY(-1px);
-        }
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr 1fr; }
+            border-color: var(--purple-accent);
+            box-shadow: 0 4px 12px rgba(107, 17, 255, 0.25);
         }
 
         button.action-btn {
-            background-color: var(--secondary-color);
+            background-color: var(--purple-accent);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 1.1rem;
             font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: 14px;
             cursor: pointer;
             width: 100%;
-            margin-top: 1rem;
-            transition: background-color 0.2s;
+            box-shadow: 0 4px 16px rgba(107, 17, 255, 0.3);
+            transition: all 0.2s;
         }
-        button.action-btn:hover { background-color: var(--primary-color); }
+
+        button.action-btn:hover {
+            background-color: var(--purple-hover);
+            transform: translateY(-1px);
+        }
 
         .citation {
             padding-left: 2rem;
             text-indent: -2rem;
-            margin-bottom: 1rem;
-            line-height: 1.5;
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
             font-size: 0.95rem;
-        }
-
-        footer {
-            background-color: #2d3748;
-            color: #a0aec0;
-            text-align: center;
-            padding: 1.5rem;
-            font-size: 0.85rem;
-            margin-top: auto;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            color: #475569;
         }
 
         .spinner {
-            border: 4px solid var(--border-color);
+            border: 4px solid rgba(107, 17, 255, 0.1);
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            border-left-color: var(--secondary-color);
+            border-left-color: var(--purple-accent);
             animation: spin 1s linear infinite;
             margin: 0 auto 1.5rem auto;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #loading-section { text-align: center; padding: 3rem 0; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- NEW: PSYCHOMETRIC CHART CSS --- */
+        /* Fake Authentication Spinner */
+        .auth-spinner {
+            border: 3px solid rgba(107, 17, 255, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: var(--purple-accent);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
         .chart-container {
             background: white;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 16px;
+            padding: 1.8rem;
             margin: 2rem 0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
+
         .chart-container h3 {
             margin-top: 0;
-            color: var(--primary-color);
             font-size: 1.1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
+            color: var(--text-dark);
             margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.6rem;
         }
+
         .bar-row {
             display: flex;
             align-items: center;
             margin-bottom: 1.2rem;
         }
+
         .bar-label {
             width: 35%;
             font-weight: 600;
             font-size: 0.9rem;
-            color: #4a5568;
+            color: var(--text-muted);
         }
+
         .bar-track {
             width: 55%;
-            background: #edf2f7;
+            background: #f1f5f9;
             height: 14px;
             border-radius: 7px;
             overflow: hidden;
             margin-right: 15px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
         }
+
         .bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--secondary-color), #4299e1);
-            width: 0%; /* Starts at 0 for animation */
+            background: linear-gradient(90deg, #6b11ff, #a855f7);
+            width: 0%;
             border-radius: 7px;
             transition: width 1.5s cubic-bezier(0.1, 0.7, 0.1, 1);
         }
+
         .bar-value {
             width: 10%;
             font-size: 0.9rem;
             font-weight: bold;
-            color: var(--primary-color);
+            color: var(--purple-accent);
             text-align: right;
         }
-        @media (max-width: 600px) {
-            .bar-row { flex-direction: column; align-items: flex-start; }
-            .bar-label, .bar-track, .bar-value { width: 100%; margin-bottom: 5px; }
-            .bar-value { text-align: left; margin-bottom: 15px; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1.25rem 1.5rem; flex-direction: column; gap: 1rem; }
+            .hero-title { font-size: 2.8rem; }
+            .options-grid { grid-template-columns: 1fr 1fr; }
+            .card-container { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
+<div class="bg-gradient"></div>
+<div class="bg-rings"></div>
+
 <header>
-    <h1>Advanced Trait Inventory (ATI)</h1>
-    <p>Empirical Personality Diagnostics Engine v3.2</p>
+    <a href="#" class="brand-logo">
+        Trait <strong>DNA</strong>
+        <div class="logo-dots">
+            <span class="dot dot-1"></span>
+            <span class="dot dot-2"></span>
+            <span class="dot dot-3"></span>
+        </div>
+    </a>
+    <nav>
+        <button class="nav-link active" onclick="openTab('assessment')">Assessment</button>
+        <button class="nav-link" onclick="openTab('about')">About</button>
+        <button class="nav-link" onclick="openTab('methodology')">Methodology</button>
+        <button class="nav-link" onclick="openTab('validation')">Validation</button>
+    </nav>
 </header>
 
-<nav>
-    <button class="tab-btn active" onclick="openTab('assessment')">Assessment Portal</button>
-    <button class="tab-btn" onclick="openTab('science')">Scientific Backing</button>
-</nav>
-
 <main>
-    <div id="assessment" class="tab-content active">
+    <h1 class="hero-title">Advanced Trait Inventory</h1>
+    <p class="hero-subtitle">Scientific approach to cognitive matrices mapping and behavioral dimensions.</p>
+
+    <div class="card-container">
         
-        <div id="quiz-section">
-            <div class="intro-box">
-                <h2>Welcome to the ATI</h2>
+        <!-- TAB 1: Assessment -->
+        <div id="assessment" class="tab-content active">
+            
+            <!-- 1. Intro Screen -->
+            <div id="intro-section">
+                <h2>Welcome to the Portal</h2>
                 <p>The Advanced Trait Inventory (ATI) utilizes a multidimensional psychometric algorithm to generate a highly accurate, individualized personality profile based on the established five-factor cognitive model. By cross-referencing your inputs against vast behavioral matrices, the system identifies your core operational baselines.</p>
-                <br>
-                <p><strong>Instructions:</strong> Answer all 20 diagnostic criteria instinctively. Overthinking your responses may skew the algorithm's validity metrics.</p>
+                <p style="margin-bottom: 2rem;"><strong>Notice:</strong> This diagnostic tool is restricted to authorized institutional users. You will need your College ID and access password to proceed.</p>
+                <button id="btn-begin-login" class="action-btn" style="width: auto; padding: 1rem 2.5rem; display: block; margin: 0 auto;">Access Assessment</button>
             </div>
 
-            <form id="quiz-form">
-                <div id="questions-container">
-                    <!-- JavaScript will inject questions here -->
+            <!-- 2. Fake Login Screen -->
+            <div id="login-section" style="display: none; max-width: 450px; margin: 0 auto; padding: 2rem 0;">
+                <h2 style="text-align: center; font-size: 2rem;">Institutional Login</h2>
+                <p style="text-align: center; margin-bottom: 2rem;">Please verify your credentials to access the secure diagnostic engine.</p>
+                
+                <form id="login-form">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label class="form-label">College ID</label>
+                        <input type="text" id="login-id" required class="input-field" placeholder="Enter your ID number">
+                    </div>
+                    <div style="margin-bottom: 2.5rem;">
+                        <label class="form-label">Access Password</label>
+                        <input type="password" id="login-password" required class="input-field" placeholder="Enter portal password">
+                    </div>
+                    <button type="submit" id="btn-authenticate" class="action-btn">Secure Login</button>
+                    
+                    <div id="auth-loading" style="display: none; text-align: center; margin-top: 1rem; color: var(--text-muted); font-weight: 500;">
+                        <div class="auth-spinner"></div> Authenticating credentials...
+                    </div>
+                </form>
+            </div>
+
+            <!-- 3. The Quiz -->
+            <div id="quiz-section" style="display: none;">
+                <div style="margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                    <h2 style="margin-bottom: 0.5rem;">Diagnostic Questionnaire</h2>
+                    <p style="margin: 0;"><strong>Instructions:</strong> Answer all 20 diagnostic criteria instinctively. Overthinking your responses may skew the algorithm's validity metrics.</p>
                 </div>
-                <button type="submit" class="action-btn">Compile Diagnostic Profile</button>
-            </form>
-        </div>
 
-        <div id="loading-section" style="display: none;">
-            <div class="spinner"></div>
-            <h2 style="border: none; text-align: center;">Processing Diagnostics</h2>
-            <p id="loading-text" style="font-weight: 500; color: #4a5568;">Initializing algorithm...</p>
-        </div>
+                <form id="quiz-form">
+                    <div id="questions-container"></div>
+                    <button type="submit" class="action-btn">Compile Diagnostic Profile</button>
+                </form>
+            </div>
 
-        <div id="result-section" style="display: none;">
-            <h2>Your ATI Diagnostic Profile</h2>
-            <p><em>Processing complete. Reliability threshold met. The algorithm has output the following clinical summary based on your precise input vectors:</em></p>
-            
-            <!-- NEW: The Psychometric Chart -->
-            <div class="chart-container">
-                <h3>Latent Trait Distribution Matrix</h3>
-                <div id="chart-bars-container">
-                    <!-- JavaScript will inject the animated bars here -->
+            <!-- 4. Loading Screen -->
+            <div id="loading-section" style="display: none; text-align: center; padding: 3rem 0;">
+                <div class="spinner"></div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Processing Diagnostic Profile</h2>
+                <p id="loading-text" style="color: var(--text-muted); font-weight: 500;">Initializing algorithm...</p>
+            </div>
+
+            <!-- 5. Results Screen -->
+            <div id="result-section" style="display: none;">
+                <h2>Your ATI Diagnostic Profile</h2>
+                <p><em>Processing complete. Reliability threshold met. The engine has generated the following summary based on your input vectors:</em></p>
+                
+                <div class="chart-container">
+                    <h3>Latent Trait Distribution Matrix</h3>
+                    <div id="chart-bars-container"></div>
                 </div>
-            </div>
 
-            <div style="background: var(--highlight-bg); border-left: 4px solid var(--secondary-color); padding: 1.5rem; margin: 2rem 0; font-size: 1.05rem; line-height: 1.7; border-radius: 0 6px 6px 0;">
-                <span id="result-text"></span>
+                <div style="background: #f8f5ff; border-left: 4px solid var(--purple-accent); padding: 1.8rem; margin: 2rem 0; font-size: 1.05rem; line-height: 1.7; border-radius: 0 12px 12px 0;">
+                    <span id="result-text" style="color: var(--text-dark);"></span>
+                </div>
+                
+                <button class="action-btn" onclick="location.reload()">Reset Assessment</button>
             </div>
-            
-            <button class="action-btn" onclick="location.reload()">Reset Portal</button>
         </div>
-    </div>
 
-    <div id="science" class="tab-content">
-        <h2>Methodological Foundations</h2>
-        <p>The ATI algorithm is grounded in over two decades of peer-reviewed empirical research. Below is a comprehensive repository of literature validating the specific behavioral metrics utilized in this assessment:</p>
-        
-        <div id="citations-container"></div>
+        <!-- TAB 2: About -->
+        <div id="about" class="tab-content">
+            <h2>About the Team</h2>
+            <p>Trait DNA was developed by an interdisciplinary consortium of researchers specializing in <a href="https://en.wikipedia.org/wiki/Cognitive_psychology" target="_blank">cognitive psychology</a>, behavioral economics, and machine learning. Frustrated by the static nature of legacy <a href="https://en.wikipedia.org/wiki/Psychometrics" target="_blank">psychometric</a> evaluations, our team set out to create a diagnostic tool that captures the fluid nuances of human personality.</p>
+            <p>By integrating robust theoretical frameworks like the <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" target="_blank">Five-Factor Model</a> with advanced predictive analytics and semantic mapping, we built a platform designed to provide unprecedented clarity into individual behavioral baselines. Our ongoing mission is to bridge the gap between traditional behavioral science and modern computational diagnostics.</p>
+        </div>
+
+        <!-- TAB 3: Methodology -->
+        <div id="methodology" class="tab-content">
+            <h2>Cutting-Edge Diagnostics</h2>
+            <p>Unlike traditional self-report inventories that rely on static scoring matrices, the Trait DNA platform employs a dynamic, non-linear algorithmic engine. Our system measures latent cognitive variables through adaptive semantic analysis, isolating nuanced deviations in how users process theoretical constructs.</p>
+            <p>By cross-referencing these subtle input vectors against a proprietary dataset of over 250,000 baseline profiles, the engine mitigates self-reporting bias and identifies underlying multidimensional traits with a high degree of statistical reliability. This allows us to map the user's operational psychology rather than merely echoing their conscious self-perception. The resulting Trait Distribution Matrix provides a high-fidelity snapshot of cognitive fluidity, operational discipline, and affective reactivity.</p>
+        </div>
+
+        <!-- TAB 4: Validation -->
+        <div id="validation" class="tab-content">
+            <h2>Validation & Scientific Backing</h2>
+            <p>The core Trait DNA algorithm is grounded in over two decades of peer-reviewed empirical research. Below is a comprehensive repository of literature validating the specific diagnostic metrics utilized in this assessment engine:</p>
+            <div id="citations-container"></div>
+        </div>
+
     </div>
 </main>
 
 <footer>
-    <p>&copy; 2026 Institute for Behavioral Diagnostics. All rights reserved.</p>
-    <p>Proprietary algorithm protected under international copyright law. Unauthorized distribution prohibited.</p>
+    <p>&copy; 2026 Trait DNA Institute. All rights reserved. Proprietary algorithm protected under international law.</p>
 </footer>
 
 <script>
+    // --- TAB LOGIC ---
     function openTab(tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
             tabContents[i].classList.remove("active");
         }
-        const tabBtns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tabBtns.length; i++) {
-            tabBtns[i].classList.remove("active");
+        
+        const navLinks = document.getElementsByClassName("nav-link");
+        for (let i = 0; i < navLinks.length; i++) {
+            navLinks[i].classList.remove("active");
         }
+
         document.getElementById(tabName).classList.add("active");
         event.currentTarget.classList.add("active");
     }
 
+    // --- VIEW LOGIC INSIDE ASSESSMENT TAB ---
+    const introSection = document.getElementById('intro-section');
+    const loginSection = document.getElementById('login-section');
+    const quizSection = document.getElementById('quiz-section');
+    const loadingSection = document.getElementById('loading-section');
+    const resultSection = document.getElementById('result-section');
+
+    // 1. Click "Access Assessment" to see login
+    document.getElementById('btn-begin-login').addEventListener('click', () => {
+        introSection.style.display = 'none';
+        loginSection.style.display = 'block';
+    });
+
+    // 2. Submit Fake Login Form with Hardcoded Credentials
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault(); 
+        
+        // Grab what the student typed
+        const enteredId = document.getElementById('login-id').value;
+        const enteredPass = document.getElementById('login-password').value;
+
+        // Check against our specific username and password
+        if (enteredId === "NCI534" && enteredPass === "Gn84thv") {
+            // Success: Hide button, show authenticating spinner
+            document.getElementById('btn-authenticate').style.display = 'none';
+            document.getElementById('auth-loading').style.display = 'block';
+
+            // Wait 1.5 seconds, then show the quiz
+            setTimeout(() => {
+                loginSection.style.display = 'none';
+                quizSection.style.display = 'block';
+            }, 1500);
+        } else {
+            // Failure: Reject them
+            alert("Authentication Failed: Unrecognized College ID or incorrect password. Please contact the module coordinator.");
+        }
+    });
+
+    // --- QUESTION GENERATION ---
     const oceanQuestions = [
         "I enjoy exploring theories and ideas that challenge my current understanding of the world.",
         "I possess an active, vivid imagination and deeply appreciate art and aesthetics.",
@@ -354,20 +591,21 @@
             <div class="question-block">
                 <p>${qNum}. ${question}</p>
                 <div class="options-grid">
-                    <input type="radio" id="q${qNum}a" name="q${qNum}" value="4" required>
-                    <label for="q${qNum}a">Strongly Agree</label>
-                    <input type="radio" id="q${qNum}b" name="q${qNum}" value="3">
-                    <label for="q${qNum}b">Agree</label>
-                    <input type="radio" id="q${qNum}c" name="q${qNum}" value="2">
-                    <label for="q${qNum}c">Disagree</label>
-                    <input type="radio" id="q${qNum}d" name="q${qNum}" value="1">
-                    <label for="q${qNum}d">Strongly Disagree</label>
+                    <input type="radio" id="q${qNum}a" name="q${qNum}" value="1" required>
+                    <label for="q${qNum}a">Strongly Disagree</label>
+                    <input type="radio" id="q${qNum}b" name="q${qNum}" value="2">
+                    <label for="q${qNum}b">Disagree</label>
+                    <input type="radio" id="q${qNum}c" name="q${qNum}" value="3">
+                    <label for="q${qNum}c">Agree</label>
+                    <input type="radio" id="q${qNum}d" name="q${qNum}" value="4">
+                    <label for="q${qNum}d">Strongly Agree</label>
                 </div>
             </div>
         `;
     });
     questionsContainer.innerHTML = questionsHTML;
 
+    // --- HOROSCOPE & CITATION GENERATION ---
     const openers = [
         "You have a strong need for other people to like and admire you, yet you harbor a tendency to be highly critical of your own achievements.",
         "While you project an exterior of disciplined control and confidence, internally you often navigate periods of uncertainty and self-doubt.",
@@ -426,9 +664,8 @@
     }
     citationsContainer.innerHTML = citationsHTML;
 
-    // --- NEW: GENERATE THE RANDOM PSYCHOMETRIC CHART ---
+    // --- CHART GENERATION ---
     function generateChart() {
-        // Disguised OCEAN Traits
         const traits = [
             "Cognitive Fluidity (CF)", 
             "Operational Discipline (OD)", 
@@ -439,12 +676,9 @@
         
         const chartContainer = document.getElementById('chart-bars-container');
         let chartHTML = '';
-        
-        // Store the random percentages to animate them after injection
         const randomScores = [];
 
         traits.forEach((trait, index) => {
-            // Generate a random score between 35 and 98
             const score = Math.floor(Math.random() * (98 - 35 + 1)) + 35;
             randomScores.push(score);
 
@@ -461,7 +695,6 @@
         
         chartContainer.innerHTML = chartHTML;
 
-        // Trigger the animation shortly after the HTML is injected
         setTimeout(() => {
             traits.forEach((trait, index) => {
                 document.getElementById(`bar-fill-${index}`).style.width = `${randomScores[index]}%`;
@@ -469,11 +702,9 @@
         }, 100);
     }
 
+    // --- QUIZ SUBMISSION LOGIC ---
     const quizForm = document.getElementById('quiz-form');
-    const quizSection = document.getElementById('quiz-section');
-    const loadingSection = document.getElementById('loading-section');
     const loadingText = document.getElementById('loading-text');
-    const resultSection = document.getElementById('result-section');
     const resultText = document.getElementById('result-text');
 
     quizForm.addEventListener('submit', (e) => {
@@ -488,14 +719,11 @@
         setTimeout(() => { loadingText.textContent = "Compiling diagnostic profile..."; }, 5500); 
 
         setTimeout(() => {
-            // 1. Pick a random horoscope
             const randomIndex = Math.floor(Math.random() * profiles.length); 
             resultText.textContent = profiles[randomIndex];
             
-            // 2. Generate the random chart bars
             generateChart();
             
-            // 3. Show the results
             loadingSection.style.display = 'none';
             resultSection.style.display = 'block';
         }, 8500); 
